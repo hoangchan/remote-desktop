@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        script-src 'self'; 
+        style-src 'self' 'unsafe-inline'; 
+        img-src 'self' data:; 
+        media-src 'self' blob:; 
+        connect-src 'self' ws://localhost:7003; 
+        child-src 'none';
+        object-src 'none';
+        worker-src 'self' blob:;
+    ">
+    <title>Electron Remote Desktop Agent</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+        #status-display { font-weight: bold; color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Electron Agent Running</h1>
+    <p>This Electron app serves as the remote desktop agent.</p>
+    <p>Status: <span id="status-display">Initializing...</span></p>
+    <p>Data Channel: <span id="data-channel">Initializing...</span></p>
+    <script src="./renderer.js"></script>
+</body>
+</html>

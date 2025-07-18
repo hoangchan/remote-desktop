@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Remote Desktop Frontend</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-YOUR_GENERATED_NONCE';">
+ 
+  
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 50px; background-color: #f0f0f0; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        #status-display { font-weight: bold; color: blue; margin-bottom: 15px; }
+        #remoteVideo { width: 100%;   border: 1px solid #ccc; background-color: #000; }
+        .info-box { background-color: #e9e9e9; padding: 10px; border-radius: 5px; margin-top: 20px; text-align: left; }
+        /* Đảm bảo video mặc định chiếm toàn bộ chiều rộng của container gốc */
+        #remoteVideo {
+            width: 100%;
+            height: auto; /* Giữ tỷ lệ khung hình */
+            display: block; /* Loại bỏ khoảng trắng dưới video */
+        }
+
+        /* ---------------------------------------------------- */
+        /* CSS áp dụng cho CONTAINER khi nó ở chế độ FULLSCREEN */
+        /* ---------------------------------------------------- */
+
+        /* Các quy tắc CSS khi #videoContainer đang ở chế độ fullscreen */
+        /* Sử dụng pseudo-class :fullscreen để style cho element đang fullscreen */
+        #videoContainer:-webkit-full-screen,
+        #videoContainer:-moz-full-screen,
+        #videoContainer:-ms-fullscreen,
+        #videoContainer:fullscreen {
+            /* Đảm bảo container chiếm toàn bộ viewport */
+            width: 100vw;
+            height: 100vh;
+            /* Loại bỏ padding/margin thừa nếu có */
+            margin: 0;
+            padding: 0;
+            /* Nền đen cho khoảng trống nếu video không lấp đầy */
+            background-color: black;
+            /* Quan trọng: Thiết lập display: flex để căn giữa video con */
+            display: flex;
+            justify-content: center; /* Căn giữa theo chiều ngang */
+            align-items: center;     /* Căn giữa theo chiều dọc */
+        }
+
+        /* ------------------------------------------------ */
+        /* CSS áp dụng cho VIDEO bên trong CONTAINER FULLSCREEN */
+        /* ------------------------------------------------ */
+
+        /* Khi videoContainer là fullscreen, làm cho remoteVideo chiếm 100% không gian */
+        /* Các selector này nhắm mục tiêu vào #remoteVideo KHI cha nó là fullscreen */
+        #videoContainer:-webkit-full-screen #remoteVideo,
+        #videoContainer:-moz-full-screen #remoteVideo,
+        #videoContainer:-ms-fullscreen #remoteVideo,
+        #videoContainer:fullscreen #remoteVideo {
+            width: 100%;
+            height: 100%;
+            /* object-fit: contain; sẽ giữ tỷ lệ và có thể để lại viền đen.
+            object-fit: cover; sẽ lấp đầy hoàn toàn nhưng có thể cắt một phần video.
+            Hãy chọn cái phù hợp với yêu cầu của bạn. 'contain' thường được ưu tiên. */
+            object-fit: contain;
+            display: block; /* Đảm bảo nó là block element */
+        }
+
+        /* CSS cho video element khi class 'fullscreen-active' được thêm vào (dùng JavaScript) */
+        /* Cái này chỉ cần nếu bạn muốn thêm style riêng biệt bằng JS,
+        nhưng các quy tắc trên (kết hợp với :fullscreen) thường mạnh hơn. */
+        #remoteVideo.fullscreen-active {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Remote Desktop Frontend</h1>
+        <p>Trạng thái: <span id="status-display">Đang khởi tạo...</span></p>
+        <div class="info-box">
+            <p>ID Frontend của bạn: <span id="frontend-id-display">Đang tải...</span></p>
+            <p>Agent cần kết nối: <input type="text" id="agentIdInput" value="Agent_Electron_A" placeholder="Nhập ID Agent"></p>
+            <button id="connectButton">Kết nối đến Agent</button>
+        </div> 
+    
+        <div id="videoContainer" style="position: relative; width: 100%; max-width: 800px; margin: auto;">
+            <video id="remoteVideo" autoplay playsinline style="width: 100%; height: auto;"></video>
+            <button id="fullscreenBtn" style="position: absolute; bottom: 10px; right: 10px; z-index: 100; background-color: rgba(0,0,0,0.5); border: none; padding: 5px; cursor: pointer; border-radius: 3px;">
+                <svg style="color: white;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize"><path d="M8 3H5a2 2 0 0 0-2 2v3m0 8v3a2 2 0 0 0 2 2h3m8-2h3a2 2 0 0 0 2-2v-3m0-8V5a2 2 0 0 0-2-2h-3"></path></svg>
+            </button>
+        </div>
+    </div>
+    <script src="frontend.js"  ></script> 
+    
+</body>
+</html>
